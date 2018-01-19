@@ -2,8 +2,6 @@ import rumps
 from scrape import get_dataframe
 import logging
 
-logging.basicConfig(level=logging.INFO)
-
 
 @rumps.clicked("Quit")
 def quit_application(_):
