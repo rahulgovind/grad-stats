@@ -36,18 +36,19 @@ def get_page(i=0, keyword="computer%20science"):
     opener = urllib2.build_opener()
     opener.addheaders = [('User-Agent', 'Mozilla/5.0')]
     response = opener.open(url)
+    logging.info("Fetching page {}".format(url))
     html = response.read()
     return html
 
 
-def find_n_pages():
-    html = get_page()
+def find_n_pages(keyword):
+    html = get_page(keyword=keyword)
     reg = re.search('over\s([\d]*)\spages', html)
     return int(reg.groups()[0])
 
 
-def get_pages(n_max):
-    n = find_n_pages()
+def get_pages(n_max, keyword):
+    n = find_n_pages(keyword=keyword)
     if n_max is not None:
         logging.info("Total pages: %d" % n)
         n = min(n, n_max)
@@ -56,13 +57,13 @@ def get_pages(n_max):
     pages = []
     for i in range(1, n + 1):
         logging.info("Getting page %d" % i)
-        pages.append(get_page(i))
+        pages.append(get_page(i, keyword))
     return pages
 
 
-def get_data(n_max=None):
+def get_data(n_max, keyword):
     data = []
-    pages = get_pages(n_max)
+    pages = get_pages(n_max, keyword)
     for page in pages:
         data = get_data_from_page(page, data)
     return data
@@ -96,8 +97,8 @@ def degree_type(x):
         return x
 
 
-def get_dataframe(n_max):
-    data = get_data(n_max)
+def get_dataframe(n_max=1, keyword="computer+science"):
+    data = get_data(n_max, keyword)
     df = pd.DataFrame(data)
     colnames = ['School', 'Program', 'Result', 'Result_Date', 'GPA',
                 'Verbal_GRE', 'Quant_GRE', 'Writing_GRE',
