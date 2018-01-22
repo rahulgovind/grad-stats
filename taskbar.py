@@ -12,11 +12,11 @@ class GradApp(rumps.App):
     def __init__(self, subject):
         super(GradApp, self).__init__('Grad Cafe', quit_button=None)
         self.subject = subject
-        print("Fetching list")
         self.timer = rumps.Timer(self.update_list, 600)
         self.timer.start()
 
     def update_list(self, _):
+        logging.info("Updating list")
         df = get_dataframe(1, self.subject)
         d = df.groupby('School').agg({'School': len, 'Submit_Date': max}).rename(
             columns={'School': 'count'})

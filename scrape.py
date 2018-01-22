@@ -3,10 +3,16 @@ import re
 import string
 import pandas as pd
 from names import clean_string, alternative_name_list
-import urllib2
 import time
 from pync import Notifier
 import logging
+
+try:
+    # For Python 3.0 and later
+    from urllib.request import build_opener
+except ImportError:
+    # Fall back to Python 2's urllib2
+    from urllib2 import build_opener
 
 
 def get_data_from_page(page, data=None):
@@ -33,7 +39,7 @@ def get_page(i=0, keyword="computer%20science"):
     else:
         url = "http://thegradcafe.com/survey/index.php?q=" + \
             keyword + "*&t=a&pp=250&o=&p=" + str(i)
-    opener = urllib2.build_opener()
+    opener = build_opener()
     opener.addheaders = [('User-Agent', 'Mozilla/5.0')]
     response = opener.open(url)
     logging.info("Fetching page {}".format(url))
