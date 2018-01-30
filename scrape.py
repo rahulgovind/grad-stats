@@ -4,7 +4,6 @@ import string
 import pandas as pd
 from names import clean_string, alternative_name_list
 import time
-from pync import Notifier
 import logging
 
 try:
@@ -43,7 +42,7 @@ def get_page(i=0, keyword="computer%20science"):
     opener.addheaders = [('User-Agent', 'Mozilla/5.0')]
     response = opener.open(url)
     logging.info("Fetching page {}".format(url))
-    html = response.read()
+    html = response.read().decode('utf-8')
     return html
 
 
@@ -87,7 +86,7 @@ def clean(x, kind='float'):
 
 def substrings_in_string(big_string, substrings):
     for substring in substrings:
-        if string.find(big_string, substring) != -1:
+        if big_string.find(substring) != -1:
             return substring
 
     # print big_string
